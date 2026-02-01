@@ -1,0 +1,420 @@
+/* Attendance Page Styles */
+.attendance-page {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.attendance-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+/* Controls Bar */
+.controls-bar {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.control-group select,
+.control-group input {
+    padding: 0.5rem 0.75rem;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    min-width: 150px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tabs button {
+    padding: 0.75rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tabs button.active,
+.tabs button:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* Quick Actions */
+.faculty-attendance .quick-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.faculty-attendance .quick-actions .action-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.faculty-attendance .quick-actions .action-btn:first-child {
+    background: var(--secondary);
+    color: white;
+}
+
+.faculty-attendance .quick-actions .action-btn.secondary {
+    background: var(--surface-light);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.faculty-attendance .summary {
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Student List */
+.student-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.student-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.student-row:hover {
+    border-color: var(--primary);
+}
+
+.student-row.present {
+    border-left: 4px solid var(--secondary);
+}
+
+.student-row.absent {
+    border-left: 4px solid var(--danger);
+}
+
+.student-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.student-info .roll {
+    font-family: monospace;
+    color: var(--text-muted);
+    min-width: 80px;
+}
+
+.student-info .name {
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.present {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.status-badge.absent {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.no-students,
+.no-history,
+.no-attendance {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    background: var(--surface);
+    border-radius: 12px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* History */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.history-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.history-row .date {
+    font-weight: 500;
+    min-width: 100px;
+}
+
+.history-row .topic {
+    flex: 1;
+    color: var(--text-muted);
+    margin: 0 1rem;
+}
+
+.history-row .stats {
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+/* Student Attendance View */
+.student-attendance .intro {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.attendance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.attendance-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.attendance-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+}
+
+.attendance-card .subject-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.attendance-card .subject-code {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.attendance-card .percentage {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.attendance-card .percentage.good {
+    color: #10b981;
+}
+
+.attendance-card .percentage.warning {
+    color: #f59e0b;
+}
+
+.attendance-card .percentage.danger {
+    color: #ef4444;
+}
+
+.attendance-card .breakdown {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.back-link {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.subject-stats {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.detail-row.present {
+    border-left: 4px solid var(--secondary);
+}
+
+.detail-row.absent {
+    border-left: 4px solid var(--danger);
+}
+
+.detail-row .date {
+    font-weight: 500;
+    min-width: 100px;
+}
+
+.detail-row .topic {
+    flex: 1;
+    color: var(--text-muted);
+    margin: 0 1rem;
+}
+
+.detail-row .status {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.detail-row .status.present {
+    color: var(--secondary);
+}
+
+.detail-row .status.absent {
+    color: var(--danger);
+}
+
+/* Message */
+.message {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.message.success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #6ee7b7;
+}
+
+.message.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .controls-bar {
+        flex-direction: column;
+    }
+
+    .control-group select,
+    .control-group input {
+        width: 100%;
+    }
+
+    .attendance-grid {
+        grid-template-columns: 1fr;
+    }
+}
