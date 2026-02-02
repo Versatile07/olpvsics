@@ -1,3 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global Modern Tech Theme */
+:root {
+    --primary: #6366f1;
+    /* Indigo-500 */
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --secondary: #0ea5e9;
+    /* Sky-500 */
+    --accent: #d946ef;
+    /* Fuschia-500 */
+
+    --bg-dark: #0f172a;
+    /* Slate-900 */
+    --bg-card: rgba(30, 41, 59, 0.7);
+    /* Slate-800 Glass */
+    --border-glass: rgba(255, 255, 255, 0.1);
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    background-image:
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(217, 70, 239, 0.15), transparent 25%);
+    min-height: 100vh;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--surface-light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}

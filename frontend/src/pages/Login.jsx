@@ -9,20 +9,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [focusedInput, setFocusedInput] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect if already logged in
-    if (isAuthenticated()) {
-      navigate("/dashboard");
-    }
+    if (isAuthenticated()) navigate("/dashboard");
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const data = await loginUser(email, password);
       setToken(data.token);
@@ -35,69 +32,98 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-background">
-        <div className="shape shape-1"></div>
-        <div className="shape shape-2"></div>
-        <div className="shape shape-3"></div>
+    <div className="login-wrapper-split">
+      {/* Left Side - Visuals */}
+      <div className="login-visual">
+        <div className="visual-content">
+          <div className="brand-pill">VSICS LaunchPad</div>
+          <h1>Unlock your <br /> <span className="highlight-text">Potential.</span></h1>
+          <p>Access the world's most advanced learning ecosystem designed for next-gen developers.</p>
+
+          <div className="visual-cards">
+            <div className="mini-card c1">
+              <span>courses_completed</span>
+              <b>12,450+</b>
+            </div>
+            <div className="mini-card c2">
+              <span>active_users</span>
+              <b>2,800+</b>
+            </div>
+          </div>
+        </div>
+        <div className="visual-overlay"></div>
       </div>
 
-      <div className="login-card">
-        <div className="login-header">
-          <h1 className="logo">VSICS Portal</h1>
-          <p className="tagline">Online Learning Platform</p>
-        </div>
+      {/* Right Side - Form */}
+      <div className="login-interaction">
+        <div className="interaction-box">
+          <div className="mobile-brand">VSICS Portal</div>
 
-        <form onSubmit={handleSubmit} className="login-form">
-          <h2>Welcome Back</h2>
-          <p className="subtitle">Sign in to continue to your dashboard</p>
+          <div className="form-head">
+            <h2>Welcome back</h2>
+            <p className="sub-head">Please enter your details to sign in.</p>
+          </div>
 
-          {error && (
-            <div className="error-message">
-              <span>⚠️</span> {error}
+          {/* Social Buttons (Visual Only) */}
+          <div className="social-login">
+            <button className="soc-btn google">
+              <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="G" />
+              Google
+            </button>
+            <button className="soc-btn github">
+              <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GH" />
+              GitHub
+            </button>
+          </div>
+
+          <div className="divider">
+            <span>OR</span>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            {error && <div className="error-alert">{error}</div>}
+
+            <div className={`input-field ${focusedInput === 'email' || email ? 'active' : ''}`}>
+              <label>Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setFocusedInput('email')}
+                onBlur={() => setFocusedInput(null)}
+                required
+              />
             </div>
-          )}
 
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
+            <div className={`input-field ${focusedInput === 'pass' || password ? 'active' : ''}`}>
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setFocusedInput('pass')}
+                onBlur={() => setFocusedInput(null)}
+                required
+              />
+            </div>
+
+            <div className="form-extras">
+              <label className="checkbox-container">
+                <input type="checkbox" />
+                <span className="checkmark"></span>
+                Remember for 30 days
+              </label>
+              <a href="#" className="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" className="submit-btn" disabled={loading}>
+              {loading ? <div className="spinner"></div> : "Sign in"}
+            </button>
+          </form>
+
+          <div className="register-promo">
+            Don't have an account? <span onClick={() => navigate("/")}>Home</span>
           </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-          </div>
-
-          <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? (
-              <>
-                <span className="btn-spinner"></span>
-                Signing in...
-              </>
-            ) : (
-              "Sign In"
-            )}
-          </button>
-        </form>
-
-        <div className="login-footer">
-          <p>Virendra Swarup Institute of Computer Studies</p>
         </div>
       </div>
     </div>
