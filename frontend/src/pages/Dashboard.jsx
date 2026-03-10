@@ -1,86 +1,69 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { logout, getRole, isAuthenticated, decodeToken } from "../utils/auth";
-import "../styles/Dashboard.css";
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
+import '../styles/Dashboard.css';
 
-// Dashboard Components for each role
-import AdminDashboard from "../components/dashboard/AdminDashboard";
-import FacultyDashboard from "../components/dashboard/FacultyDashboard";
-import StudentDashboard from "../components/dashboard/StudentDashboard";
+const navItems = [
+  { path: '/resources', label: '📚 Resources', roles: ['admin', 'faculty', 'student'] },
+  { path: '/upload-resource', label: '📤 Upload Resource', roles: ['faculty', 'admin'] },
+  { path: '/attendance', label: '📋 Attendance', roles: ['admin', 'faculty', 'student'] },
+  { path: '/assignments', label: '📝 Assignments', roles: ['admin', 'faculty', 'student'] },
+  { path: '/placements', label: '💼 Placements', roles: ['admin', 'faculty', 'student'] },
+  { path: '/notices', label: '📢 Notices', roles: ['admin', 'faculty', 'student'] },
+  { path: '/external-courses', label: '🌐 External Courses', roles: ['admin', 'faculty', 'student'] },
+];
 
-const Dashboard = () => {
+export default function Dashboard() {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/");
-      return;
-    }
-
-    const userRole = getRole();
-    if (!userRole) {
-      logout();
-      return;
-    }
-
-    setRole(userRole);
-    setLoading(false);
-  }, [navigate]);
-
-  if (loading) {
-    return (
-      <div className="dashboard-loading">
-        <div className="spinner"></div>
-        <p>Loading dashboard...</p>
-      </div>
-    );
-  }
-
-  const renderDashboard = () => {
-    switch (role) {
-      case "admin":
-        return <AdminDashboard />;
-      case "faculty":
-        return <FacultyDashboard />;
-      case "student":
-        return <StudentDashboard />;
-      default:
-        return <p>Unknown role. Please contact administrator.</p>;
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
-  const getRoleLabel = () => {
-    const labels = {
-      admin: "Administrator",
-      faculty: "Faculty",
-      student: "Student"
-    };
-    return labels[role] || role;
-  };
+  const roleLabel = { admin: 'Administrator', faculty: 'Faculty', student: 'Student' };
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
       <header className="dashboard-header">
         <div className="header-left">
           <h1 className="logo">VSICS Portal</h1>
         </div>
         <div className="header-right">
-          <span className="role-badge">{getRoleLabel()}</span>
-          <button onClick={logout} className="logout-btn">
-            Logout
-          </button>
+          <span className="role-badge">{roleLabel[user?.role] || user?.role}</span>
+          <span style={{ color: '#aaa', marginRight: '1rem' }}>{user?.name}</span>
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="dashboard-main">
-        {renderDashboard()}
+      <main className="dashboard-main" style={{ padding: '2rem' }}>
+        <h2 style={{ marginBottom: '1.5rem', color: '#fff' }}>Welcome, {user?.name}!</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
+          {navItems
+            .filter(item => item.roles.includes(user?.role))
+            .map(item => (
+              <Link
+                key={item.path}
+                to={item.path}
+                style={{
+                  display: 'block',
+                  padding: '1.5rem',
+                  background: 'rgba(255,255,255,0.05)',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#fff',
+                  textDecoration: 'none',
+                  fontSize: '1.1rem',
+                  transition: 'all 0.2s',
+                }}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+              >
+                {item.label}
+              </Link>
+            ))}
+        </div>
       </main>
     </div>
   );
-};
-
-export default Dashboard;
+}

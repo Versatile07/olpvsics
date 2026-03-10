@@ -1,31 +1,34 @@
-import { useState, useEffect } from "react";
-import { loginUser } from "../api/auth.api";
-import { setToken, isAuthenticated } from "../utils/auth";
-import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import '../styles/Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
+  const { user, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated()) navigate("/dashboard");
-  }, [navigate]);
+    if (user) navigate('/dashboard');
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    if (!email || !password) {
+      setError('Email and password are required');
+      return;
+    }
+    setError('');
     setLoading(true);
     try {
-      const data = await loginUser(email, password);
-      setToken(data.token);
-      navigate("/dashboard");
+      await login(email, password);
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid credentials");
+      setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -64,20 +67,8 @@ const Login = () => {
             <p className="sub-head">Please enter your details to sign in.</p>
           </div>
 
-          {/* Social Buttons (Visual Only) */}
-          <div className="social-login">
-            <button className="soc-btn google">
-              <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="G" />
-              Google
-            </button>
-            <button className="soc-btn github">
-              <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GH" />
-              GitHub
-            </button>
-          </div>
-
           <div className="divider">
-            <span>OR</span>
+            <span>SIGN IN</span>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -86,6 +77,7 @@ const Login = () => {
             <div className={`input-field ${focusedInput === 'email' || email ? 'active' : ''}`}>
               <label>Email Address</label>
               <input
+                id="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -98,6 +90,7 @@ const Login = () => {
             <div className={`input-field ${focusedInput === 'pass' || password ? 'active' : ''}`}>
               <label>Password</label>
               <input
+                id="login-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -107,22 +100,13 @@ const Login = () => {
               />
             </div>
 
-            <div className="form-extras">
-              <label className="checkbox-container">
-                <input type="checkbox" />
-                <span className="checkmark"></span>
-                Remember for 30 days
-              </label>
-              <a href="#" className="forgot-link">Forgot password?</a>
-            </div>
-
-            <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? <div className="spinner"></div> : "Sign in"}
+            <button id="login-submit" type="submit" className="submit-btn" disabled={loading}>
+              {loading ? <div className="spinner"></div> : 'Sign in'}
             </button>
           </form>
 
           <div className="register-promo">
-            Don't have an account? <span onClick={() => navigate("/")}>Home</span>
+            Don't have an account? <span onClick={() => navigate('/')}>Home</span>
           </div>
         </div>
       </div>
