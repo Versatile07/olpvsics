@@ -1,86 +1,62 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { logout, getRole, isAuthenticated, decodeToken } from "../utils/auth";
-import "../styles/Dashboard.css";
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
+import '../styles/Dashboard.css';
 
-// Dashboard Components for each role
-import AdminDashboard from "../components/dashboard/AdminDashboard";
-import FacultyDashboard from "../components/dashboard/FacultyDashboard";
-import StudentDashboard from "../components/dashboard/StudentDashboard";
+const navItems = [
+  { path: '/resources', label: 'Resources', icon: '📚', desc: 'Notes & Papers', roles: ['admin', 'faculty', 'student'] },
+  { path: '/upload-resource', label: 'Upload Resource', icon: '📤', desc: 'Share study material', roles: ['faculty', 'admin'] },
+  { path: '/attendance', label: 'Attendance', icon: '📋', desc: 'Track & manage', roles: ['admin', 'faculty', 'student'] },
+  { path: '/assignments', label: 'Assignments', icon: '📝', desc: 'Create & submit', roles: ['admin', 'faculty', 'student'] },
+  { path: '/placements', label: 'Placements', icon: '💼', desc: 'Opportunities', roles: ['admin', 'faculty', 'student'] },
+  { path: '/notices', label: 'Notices', icon: '📢', desc: 'Announcements', roles: ['admin', 'faculty', 'student'] },
+  { path: '/external-courses', label: 'External Courses', icon: '🌐', desc: 'Enroll & certify', roles: ['admin', 'faculty', 'student'] },
+];
 
-const Dashboard = () => {
+export default function Dashboard() {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/");
-      return;
-    }
-
-    const userRole = getRole();
-    if (!userRole) {
-      logout();
-      return;
-    }
-
-    setRole(userRole);
-    setLoading(false);
-  }, [navigate]);
-
-  if (loading) {
-    return (
-      <div className="dashboard-loading">
-        <div className="spinner"></div>
-        <p>Loading dashboard...</p>
-      </div>
-    );
-  }
-
-  const renderDashboard = () => {
-    switch (role) {
-      case "admin":
-        return <AdminDashboard />;
-      case "faculty":
-        return <FacultyDashboard />;
-      case "student":
-        return <StudentDashboard />;
-      default:
-        return <p>Unknown role. Please contact administrator.</p>;
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
-  const getRoleLabel = () => {
-    const labels = {
-      admin: "Administrator",
-      faculty: "Faculty",
-      student: "Student"
-    };
-    return labels[role] || role;
-  };
+  const roleLabel = { admin: 'Administrator', faculty: 'Faculty', student: 'Student' };
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
       <header className="dashboard-header">
         <div className="header-left">
           <h1 className="logo">VSICS Portal</h1>
         </div>
         <div className="header-right">
-          <span className="role-badge">{getRoleLabel()}</span>
-          <button onClick={logout} className="logout-btn">
-            Logout
-          </button>
+          <span className="role-badge">{roleLabel[user?.role] || user?.role}</span>
+          <span style={{ color: 'var(--text-500)', fontSize: '14px' }}>{user?.name}</span>
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="dashboard-main">
-        {renderDashboard()}
+        <h2 style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text-900)', marginBottom: '8px' }}>Welcome, {user?.name}!</h2>
+        <p style={{ color: 'var(--text-500)', marginBottom: '32px', fontSize: '15px' }}>What would you like to do today?</p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>
+          {navItems
+            .filter(item => item.roles.includes(user?.role))
+            .map(item => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="card"
+                style={{ display: 'block', textDecoration: 'none', padding: '24px' }}
+              >
+                <div style={{ fontSize: '32px', marginBottom: '12px' }}>{item.icon}</div>
+                <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text-900)', margin: '0 0 4px 0' }}>{item.label}</h3>
+                <p style={{ fontSize: '13px', color: 'var(--text-500)', margin: 0 }}>{item.desc}</p>
+              </Link>
+            ))}
+        </div>
       </main>
     </div>
   );
-};
-
-export default Dashboard;
+}

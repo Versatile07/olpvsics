@@ -1,0 +1,32 @@
+# Git line ending normalization
+# Ensures LF on Linux/Mac and can be CRLF on Windows checkout
+
+* text=auto eol=lf
+
+# Force LF for source files
+*.js    text eol=lf
+*.jsx   text eol=lf
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.json  text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.sql   text eol=lf
+*.sh    text eol=lf
+*.env*  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+
+# Treat shell scripts as text with LF
+*.sh    eol=lf
+
+# Binary files — no conversions
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.zip   binary
+*.ico   binary
+*.webp  binary
