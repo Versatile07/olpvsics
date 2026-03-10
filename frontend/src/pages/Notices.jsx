@@ -20,24 +20,28 @@ export default function Notices() {
   }, []);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-        <h1>📢 Notices</h1>
-        <Link to="/dashboard" style={{ color: '#aaa' }}>← Dashboard</Link>
+    <div className="page-wrapper" style={{ padding: '40px 48px', maxWidth: '900px', margin: '0 auto' }}>
+      <div className="page-header">
+        <h1 className="page-title">📢 Notices</h1>
+        <Link to="/dashboard" className="back-link">← Dashboard</Link>
       </div>
 
-      {loading ? <p>Loading...</p> : notices.length === 0 ? (
-        <p style={{ color: '#aaa' }}>No notices posted yet.</p>
+      {loading ? <p style={{ color: 'var(--text-500)' }}>Loading...</p> : notices.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
+          <p style={{ color: 'var(--text-500)' }}>No notices posted yet.</p>
+        </div>
       ) : (
-        notices.map(n => (
-          <div key={n.id} style={{ padding: '1rem', marginBottom: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <h3 style={{ margin: 0 }}>{n.title}</h3>
-            <p style={{ color: '#ccc', fontSize: '0.9rem', margin: '0.5rem 0' }}>{n.body}</p>
-            <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-              Posted by: {n.posted_by_name || 'N/A'} | {new Date(n.created_at).toLocaleString()}
-            </p>
-          </div>
-        ))
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {notices.map(n => (
+            <div key={n.id} className="card" style={{ padding: '20px 24px' }}>
+              <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text-900)', margin: '0 0 8px 0' }}>{n.title}</h3>
+              <p style={{ fontSize: '15px', color: 'var(--text-700)', lineHeight: 1.6, margin: '0 0 10px 0' }}>{n.body}</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-300)', margin: 0 }}>
+                Posted by: {n.posted_by_name || 'N/A'} • {new Date(n.created_at).toLocaleString()}
+              </p>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

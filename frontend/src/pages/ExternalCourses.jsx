@@ -36,9 +36,7 @@ export default function ExternalCourses() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      await api.post(`/external-courses/${courseId}/upload-certificate`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await api.post(`/external-courses/${courseId}/upload-certificate`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       alert('Certificate uploaded!');
       fetchCourses();
     } catch (err) {
@@ -47,40 +45,44 @@ export default function ExternalCourses() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-        <h1>🌐 External Courses</h1>
-        <Link to="/dashboard" style={{ color: '#aaa' }}>← Dashboard</Link>
+    <div className="page-wrapper" style={{ padding: '40px 48px', maxWidth: '900px', margin: '0 auto' }}>
+      <div className="page-header">
+        <h1 className="page-title">🌐 External Courses</h1>
+        <Link to="/dashboard" className="back-link">← Dashboard</Link>
       </div>
 
-      {loading ? <p>Loading...</p> : courses.length === 0 ? (
-        <p style={{ color: '#aaa' }}>No external courses available.</p>
+      {loading ? <p style={{ color: 'var(--text-500)' }}>Loading...</p> : courses.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
+          <p style={{ color: 'var(--text-500)' }}>No external courses available.</p>
+        </div>
       ) : (
-        courses.map(c => (
-          <div key={c.id} style={{ padding: '1rem', marginBottom: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <h3 style={{ margin: 0 }}>{c.title}</h3>
-            <p style={{ color: '#4cf', margin: '0.25rem 0' }}>Provider: {c.provider || 'N/A'}</p>
-            {c.description && <p style={{ color: '#ccc', fontSize: '0.9rem' }}>{c.description}</p>}
-            {c.link && <a href={c.link} target="_blank" rel="noreferrer" style={{ color: '#4cf' }}>🔗 Course Link</a>}
-            <p style={{ color: '#aaa', fontSize: '0.8rem' }}>
-              Deadline: {c.deadline ? new Date(c.deadline).toLocaleDateString() : 'N/A'}
-            </p>
-
-            {user?.role === 'student' && (
-              <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                <button onClick={() => handleEnroll(c.id)} style={{ padding: '0.3rem 1rem', background: '#4f9', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                  Enroll
-                </button>
-                <input
-                  type="file"
-                  onChange={e => handleCertUpload(c.id, e.target.files[0])}
-                  style={{ color: '#fff', fontSize: '0.85rem' }}
-                />
-                <span style={{ color: '#888', fontSize: '0.8rem' }}>Upload certificate after completion</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {courses.map(c => (
+            <div key={c.id} className="card" style={{ padding: '20px 24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text-900)', margin: '0 0 2px 0' }}>{c.title}</h3>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--brand-blue-500)', margin: '0 0 6px 0' }}>Provider: {c.provider || 'N/A'}</p>
+                  {c.description && <p style={{ fontSize: '14px', color: 'var(--text-700)', margin: '0 0 8px 0', lineHeight: 1.5 }}>{c.description}</p>}
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {c.link && <a href={c.link} target="_blank" rel="noreferrer" className="btn-secondary" style={{ fontSize: '13px', height: '32px', padding: '4px 12px' }}>🔗 Course Link</a>}
+                    {c.deadline && <span style={{ fontSize: '12px', color: 'var(--text-300)' }}>Deadline: {new Date(c.deadline).toLocaleDateString()}</span>}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        ))
+
+              {user?.role === 'student' && (
+                <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  <button onClick={() => handleEnroll(c.id)} className="btn-primary" style={{ height: '36px', fontSize: '13px', padding: '6px 16px' }}>Enroll</button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input type="file" onChange={e => handleCertUpload(c.id, e.target.files[0])} style={{ fontSize: '12px', color: 'var(--text-700)' }} />
+                    <span style={{ fontSize: '11px', color: 'var(--text-300)' }}>Upload certificate</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

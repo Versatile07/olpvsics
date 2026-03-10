@@ -11,11 +11,7 @@ export default function UploadResource() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title) {
-      setMessage('Title is required');
-      return;
-    }
-
+    if (!form.title) { setMessage('Title is required'); return; }
     setLoading(true);
     try {
       const formData = new FormData();
@@ -25,11 +21,7 @@ export default function UploadResource() {
       formData.append('type', form.type);
       if (form.url) formData.append('url', form.url);
       if (file) formData.append('file', file);
-
-      await api.post('/resources', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
+      await api.post('/resources', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       setMessage('Resource uploaded successfully!');
       setTimeout(() => navigate('/resources'), 1500);
     } catch (err) {
@@ -39,55 +31,51 @@ export default function UploadResource() {
     }
   };
 
-  const inputStyle = { padding: '0.5rem', borderRadius: '6px', border: '1px solid #555', background: '#222', color: '#fff', width: '100%' };
-
   return (
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-        <h1>📤 Upload Resource</h1>
-        <Link to="/resources" style={{ color: '#aaa' }}>← Resources</Link>
+    <div className="page-wrapper" style={{ padding: '40px 48px', maxWidth: '640px', margin: '0 auto' }}>
+      <div className="page-header">
+        <h1 className="page-title">📤 Upload Resource</h1>
+        <Link to="/resources" className="back-link">← Resources</Link>
       </div>
 
-      {message && <div style={{ padding: '0.75rem', marginBottom: '1rem', borderRadius: '6px', background: message.includes('success') ? '#143' : '#411', color: '#fff' }}>{message}</div>}
+      {message && <div className={`alert ${message.includes('success') ? 'alert-success' : 'alert-error'}`}>{message}</div>}
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#ccc' }}>Title *</label>
-          <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required style={inputStyle} />
-        </div>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#ccc' }}>Subject ID</label>
-          <input value={form.subject_id} onChange={e => setForm(f => ({ ...f, subject_id: e.target.value }))} style={inputStyle} />
-        </div>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#ccc' }}>Year</label>
-          <input value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} style={inputStyle} />
-        </div>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#ccc' }}>Type</label>
-          <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} style={inputStyle}>
-            <option value="note">Note</option>
-            <option value="paper">Paper</option>
-          </select>
-        </div>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#ccc' }}>URL (optional, alternative to file)</label>
-          <input value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} style={inputStyle} />
-        </div>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#ccc' }}>File</label>
-          <input type="file" onChange={e => setFile(e.target.files[0])} style={{ color: '#fff' }} />
-        </div>
-
-        <button type="submit" disabled={loading} style={{ padding: '0.75rem 2rem', borderRadius: '8px', background: '#4f9', border: 'none', cursor: 'pointer', fontSize: '1rem' }}>
-          {loading ? 'Uploading...' : 'Upload'}
-        </button>
-      </form>
+      <div className="card" style={{ padding: '32px' }}>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Title *</label>
+            <input className="input" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Subject ID</label>
+              <input className="input" value={form.subject_id} onChange={e => setForm(f => ({ ...f, subject_id: e.target.value }))} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Year</label>
+              <input className="input" value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} />
+            </div>
+          </div>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Type</label>
+            <select className="select" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
+              <option value="note">Note</option>
+              <option value="paper">Paper</option>
+            </select>
+          </div>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>URL (optional)</label>
+            <input className="input" value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} placeholder="https://..." />
+          </div>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>File</label>
+            <input type="file" onChange={e => setFile(e.target.files[0])} style={{ fontSize: '14px', color: 'var(--text-700)' }} />
+          </div>
+          <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%' }}>
+            {loading ? 'Uploading...' : 'Upload Resource'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
