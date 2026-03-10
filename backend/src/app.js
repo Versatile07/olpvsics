@@ -19,7 +19,7 @@ app.use(express.json());
 
 // Serve uploaded files statically
 // TODO: For production, swap to Cloudinary/S3 signed URLs
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Mount API router
 app.use('/api', apiRouter);

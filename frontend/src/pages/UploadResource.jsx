@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 
@@ -8,15 +8,25 @@ export default function UploadResource() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    api.get('/subjects')
+      .then(res => {
+        setSubjects(res.data);
+      })
+      .catch(err => console.error('Failed to load subjects', err));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title) { setMessage('Title is required'); return; }
+    if (!form.subject_id) { setMessage('Please select a subject'); return; }
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append('title', form.title);
-      if (form.subject_id) formData.append('subject_id', form.subject_id);
+      formData.append('subject_id', form.subject_id);
       if (form.year) formData.append('year', form.year);
       formData.append('type', form.type);
       if (form.url) formData.append('url', form.url);
@@ -48,12 +58,17 @@ export default function UploadResource() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Subject ID</label>
-              <input className="input" value={form.subject_id} onChange={e => setForm(f => ({ ...f, subject_id: e.target.value }))} />
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Subject *</label>
+              <select className="select" value={form.subject_id} onChange={e => setForm(f => ({ ...f, subject_id: e.target.value }))} required>
+                <option value="">Select a subject...</option>
+                {subjects.map(sub => (
+                  <option key={sub.id} value={sub.id}>{sub.name}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-500)', marginBottom: '6px' }}>Year</label>
-              <input className="input" value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} />
+              <input className="input" value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="e.g. 2024" />
             </div>
           </div>
           <div style={{ marginBottom: '16px' }}>
