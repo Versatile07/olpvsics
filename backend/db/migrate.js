@@ -1,6 +1,7 @@
 /**
  * Migration Runner
  * Reads and executes SQL migration files in order.
+ * Supports per-user password hashing via HASH:email placeholders in seed SQL.
  * Usage: node db/migrate.js
  */
 import fs from 'fs';
@@ -14,6 +15,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
+
+// =============================================
+// Per-user password map
+// email → plaintext password
+// =============================================
+const USER_PASSWORDS = {
+  'admin@vsics.edu':  'lavi$h.07',
+  'rahul@vsics.edu':  'lavi5h.07',
+  'rekh@vsics.edu':   'RekhBCA402',
+  'iqbal@vsics.edu':  'IqbalBCA102',
+  'ram@vsics.edu':     'RamBCA501',
+  'aparna@vsics.edu': 'AparnaBCA103',
+  'nitin@vsics.edu':  'NitinBCA405',
+  'ashish@vsics.edu': 'AshishBCA105',
+  'sanjay@vsics.edu': 'SanjayBCA601',
+  'shweta@vsics.edu': 'ShwetaBCA301',
+
+  // Legacy test accounts (kept for tests)
+  'admin@vsics.test':   'AdminPass123',
+  'faculty@vsics.test': 'FacultyPass123',
+  'student1@vsics.test':'StudentPass123',
+  'student2@vsics.test':'StudentPass123',
+};
 
 async function migrate() {
   // Connect without database first to allow CREATE DATABASE
@@ -33,33 +57,15 @@ async function migrate() {
     const filePath = path.join(migrationsDir, file);
     let sql = fs.readFileSync(filePath, 'utf8');
 
-    // If this is the seed file, generate proper bcrypt hashes
+    // If this is the seed file, replace HASH:email placeholders with real bcrypt hashes
     if (file.includes('seed')) {
-      const adminHash = await bcrypt.hash('AdminPass123', 10);
-      const facultyHash = await bcrypt.hash('FacultyPass123', 10);
-      const studentHash = await bcrypt.hash('StudentPass123', 10);
-
-      // Replace placeholder hashes with real ones
-      sql = sql
-        .replace(
-          /'\$2b\$10\$8KzaNdKIMyOkASCYkNHXSuDr1gLXrb3pVnD4G3eNqVqLGXpKq3EDm'/g,
-          `'${adminHash}'`
-        );
-
-      // More targeted replacements for faculty and student passwords
-      // Since all placeholders are the same, we handle it by replacing line by line
-      const lines = sql.split('\n');
-      const processedLines = [];
-      for (const line of lines) {
-        if (line.includes('faculty@vsics.test')) {
-          processedLines.push(line.replace(adminHash, facultyHash));
-        } else if (line.includes('student1@vsics.test') || line.includes('student2@vsics.test')) {
-          processedLines.push(line.replace(adminHash, studentHash));
-        } else {
-          processedLines.push(line);
-        }
+      console.log('  Generating bcrypt hashes for users...');
+      for (const [email, plainPassword] of Object.entries(USER_PASSWORDS)) {
+        const hash = await bcrypt.hash(plainPassword, 10);
+        // Replace all occurrences of 'HASH:email' with the bcrypt hash
+        const placeholder = `HASH:${email}`;
+        sql = sql.replaceAll(placeholder, hash);
       }
-      sql = processedLines.join('\n');
     }
 
     console.log(`  Running: ${file}...`);
