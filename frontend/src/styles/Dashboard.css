@@ -1,6 +1,6 @@
 /* ============================================= */
-/* DASHBOARD — VSICS Design System               */
-/* Light theme with blue navigation cards         */
+/* DASHBOARD — Dark AI/SaaS Theme                 */
+/* micro1-inspired: dark bg + electric blue       */
 /* ============================================= */
 
 .dashboard-container {
@@ -8,23 +8,22 @@
   background: var(--bg-100);
 }
 
-/* ── Header ── */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 48px;
   height: 64px;
-  background: var(--surface-white);
+  background: var(--bg-200);
   border-bottom: 1px solid var(--border-light);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .header-left .logo {
   font-size: 20px;
-  font-weight: 800;
-  color: var(--brand-navy);
+  font-weight: 700;
+  color: var(--text-900);
   margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .header-right {
@@ -37,12 +36,13 @@
   display: inline-flex;
   align-items: center;
   background: var(--accent-aqua);
-  color: var(--brand-navy);
+  color: var(--neon-blue);
   padding: 5px 12px;
   border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.3px;
+  border: 1px solid rgba(37,99,235,0.2);
 }
 
 .logout-btn {
@@ -50,21 +50,19 @@
   color: var(--text-500);
   border: 1px solid var(--border-light);
   padding: 8px 18px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
   transition: all var(--transition-fast);
 }
-
 .logout-btn:hover {
-  border-color: #d93025;
-  color: #d93025;
-  background: #fde8e8;
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(239,68,68,0.08);
 }
 
-/* ── Main Content ── */
 .dashboard-main {
   max-width: 1200px;
   margin: 0 auto;
@@ -72,13 +70,12 @@
 }
 
 @media (max-width: 1024px) {
-  .dashboard-header { padding: 0 32px; }
-  .dashboard-main { padding: 32px; }
+  .dashboard-header { padding: 0 24px; }
+  .dashboard-main { padding: 32px 24px; }
 }
-
 @media (max-width: 640px) {
-  .dashboard-header { padding: 0 20px; height: 56px; }
+  .dashboard-header { padding: 0 16px; height: 56px; }
   .header-left .logo { font-size: 18px; }
-  .dashboard-main { padding: 24px 20px; }
+  .dashboard-main { padding: 24px 16px; }
   .header-right span:not(.role-badge) { display: none; }
 }
