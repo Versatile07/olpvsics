@@ -6,6 +6,13 @@
 CREATE DATABASE IF NOT EXISTS olpvsics;
 USE olpvsics;
 
+-- Disable FK checks so we can drop tables in any order
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Drop legacy tables from old schema (if they exist)
+DROP TABLE IF EXISTS materials;
+DROP TABLE IF EXISTS classes;
+
 -- Drop existing tables (in correct order due to foreign keys)
 DROP TABLE IF EXISTS enrollments_external;
 DROP TABLE IF EXISTS courses_external;
@@ -18,6 +25,9 @@ DROP TABLE IF EXISTS placements;
 DROP TABLE IF EXISTS subjects;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS departments;
+
+-- Re-enable FK checks
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- =============================================
 -- DEPARTMENTS TABLE
